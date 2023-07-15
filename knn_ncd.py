@@ -1,5 +1,31 @@
-import gzip
 import numpy as np
+import importlib
+
+def set_comp_algo(comp_algo):
+    """
+    Get the compress function for the specified compression algorithm.
+
+    Args:
+        comp_algo: A string representing the compression algorithm.
+
+    Returns:
+        The compress function for the specified compression algorithm.
+    """
+    comp_dict = {
+        "gzip": ("gzip", "compress"),
+        "bz2": ("bz2", "compress"),
+        "lzma": ("lzma", "compress"),
+        "zstd": ("zstd", "compress"),
+        "snappy": ("snappy", "compress"),
+        "lz4": ("lz4.block", "compress"),
+    }
+
+
+    module_name, func_name = comp_dict[comp_algo]
+    module = importlib.import_module(module_name)
+    compress_func = getattr(module, func_name)
+
+    return compress_func
 
 class KNN_NCD:
     """
@@ -10,17 +36,19 @@ class KNN_NCD:
         training_set: A list of tuples, each containing a data point and its class label.
     """
 
-    def __init__(self, k=1):
+    def __init__(self, k=1, comp_algo="gzip"):
         """
         Initialize a new instance of KNN_NCD.
 
         Args:
             k: An integer representing the number of neighbors to consider.
+            compression_algorithm: A string representing the compression algorithm.
         """
         if k <= 0:
             raise ValueError("k should be greater than 0.")
-        self.k = k  # number of neighbors to consider for classification
-        self.training_set = None  # initial empty training set
+        self.k = k  
+        self.training_set = None 
+        self.compressor = set_comp_algo(comp_algo)
 
     def calc(self, x1, x2):
         """
@@ -33,11 +61,11 @@ class KNN_NCD:
         Returns:
             The Normalized Compression Distance between x1 and x2.
         """
-        Cx1 = len(gzip.compress(x1.encode()))  # compress x1
-        Cx2 = len(gzip.compress(x2.encode()))  # compress x2
-        x1x2 = " ".join([x1, x2])  # concatenate x1 and x2
-        Cx1x2 = len(gzip.compress(x1x2.encode()))  # compress the combined string
-        return (Cx1x2 - min(Cx1, Cx2)) / max(Cx1, Cx2)  # compute the NCD
+        Cx1 = len(self.compressor(x1.encode())) 
+        Cx2 = len(self.compressor(x2.encode()))  
+        x1x2 = " ".join([x1, x2])  
+        Cx1x2 = len(self.compressor(x1x2.encode()))  
+        return (Cx1x2 - min(Cx1, Cx2)) / max(Cx1, Cx2)
 
     def fit(self, training_set):
         """
@@ -76,4 +104,3 @@ class KNN_NCD:
             top_k_class = [self.training_set[i][1] for i in sorted_idx[:self.k]]
             predictions.append(max(set(top_k_class), key=top_k_class.count))
         return predictions
-

@@ -1,17 +1,44 @@
-# NCD Classifier
+## K-Nearest Neighbors Classifier with Normalized Compression Distance (KNN_NCD)
 
-A Python implementation of the K-Nearest Neighbors (KNN) classifier using Normalized Compression Distance (NCD). This unique approach to KNN leverages the idea of compressing data to measure similarity, providing a powerful tool for text classification tasks.
+This module implements a K-Nearest Neighbors classifier that uses Normalized Compression Distance (NCD) to measure similarity between instances. The class `KNN_NCD`` provides methods for fitting the model to the training data and predicting the class of test instances.
 
 Author: Asher Bond
 Contact: source@elasticprovisioner.com
 
-### Dependencies
+## Dependencies
 
 Ensure that you have `gzip` and `numpy` installed in your Python environment. You can install them using pip:
 
 ```bash
 pip install numpy
 ```
+
+Install various compression algorithms if you're using one not built into Python.
+```bash
+pip install zstandard python-snappy lz4
+```
+
+## Using different compression algorithms
+
+The classifier uses a compression algorithm to compute the Normalized Compression Distance. By default, it uses the gzip algorithm. However, you can use a different algorithm by passing its name as a string to the KNN_NCD constructor, like so:
+
+```python
+knn = KNN_NCD(k=1, compression='lzma')
+```
+
+The currently supported compression algorithms are: "gzip", "bz2", "lzma", "zstd", "snappy", and "lz4".
+
+These compression algorithms are built into Python:
+- gzip
+- bz2
+- lzma
+
+These compression algorithms require the following Python libraries:
+- zstd: Install with `pip install zstandard`
+- snappy: Install with `pip install python-snappy`
+- lz4: Install with `pip install lz4`
+
+If you try to use a compression algorithm without the required library installed, or if you specify a compression algorithm that is not supported, the KNN_NCD constructor will raise a ValueError.
 
 ## Usage
 
@@ -37,6 +64,7 @@ predictions = knn_ncd.predict(test_data)
 ```
 
 In this case, the `knn_ncd` object is trained to classify text strings as "spam" or "not-spam". The number of neighbors `k` is set to `3`, meaning the classifier will consider the 3 nearest neighbors according to the Normalized Compression Distance to make its prediction.
+
 
 ## Testing
 
