@@ -4,7 +4,7 @@ This module implements a K-Nearest Neighbors classifier that uses Normalized Com
 
 Author: Asher Bond
 
-Contact: source@elasticprovisioner.com / @AsherBond on github
+Contact: source@elasticprovisioner.com / [@AsherBond on GitHub](https://github.com/AsherBond)
 
 ## Dependencies
 
