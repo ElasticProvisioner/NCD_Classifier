@@ -1,6 +1,6 @@
 ## K-Nearest Neighbors Classifier with Normalized Compression Distance (KNN_NCD)
 
-This module implements a K-Nearest Neighbors classifier that uses Normalized Compression Distance (NCD) to measure similarity between instances. The class `KNN_NCD`` provides methods for fitting the model to the training data and predicting the class of test instances.
+This module implements a K-Nearest Neighbors classifier that uses Normalized Compression Distance (NCD) to measure similarity between instances. The class `KNN_NCD` provides methods for fitting the model to the training data and predicting the class of test instances.
 
 Author: Asher Bond
 Contact: source@elasticprovisioner.com
